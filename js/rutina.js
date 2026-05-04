@@ -168,6 +168,19 @@ function updateBackground() {
   }
 }
 
+// Progress bar for exercise
+function updateProgressBar(timeLeft, totalTime) {
+  const bar = document.getElementById('exerciseProgressBar');
+  if (!bar) return;
+  const pct = totalTime > 0 ? (timeLeft / totalTime) * 100 : 0;
+  bar.style.width = pct + '%';
+}
+
+function resetProgressBar() {
+  const bar = document.getElementById('exerciseProgressBar');
+  if (bar) bar.style.width = '100%';
+}
+
 // core timer
 function startTimer() {
   clearInterval(interval);
@@ -189,6 +202,7 @@ function startTimer() {
 
     timeLeft--;
     updateTimerDisplay(timeLeft);
+      if (isExercise) updateProgressBar(timeLeft, exerciseTime);
 
     if (!isPreparation && isExercise) totalTime++;
     updateTotalTimeDisplay();
@@ -206,6 +220,7 @@ function startTimer() {
     }
 
     if (timeLeft === 0) {
+        resetProgressBar();
       clearInterval(interval);
 
       if (isPreparation) {
@@ -291,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
     isExercise = false;
     totalTime = 0;
     milestone40Reached = false;
+    resetProgressBar();
     document.body.classList.remove('timer-solo');
     updateTimerDisplay(preparationTime);
     updateTotalTimeDisplay();
