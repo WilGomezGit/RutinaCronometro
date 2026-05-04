@@ -271,7 +271,6 @@ document.addEventListener('DOMContentLoaded', function () {
   isPaused = false;
   isPreparation = true;
   isExercise = false;
-  milestone40Reached = false;
   document.body.classList.add('timer-solo');
 
   // 🔊 desbloqueo de audio más limpio
