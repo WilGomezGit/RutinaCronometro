@@ -155,8 +155,8 @@ body.timer-solo .right-panel{margin-left:0;flex:1}
 .timer.phase-pop{animation:popTimer 450ms ease}
 
 body.phase-preparation{background:linear-gradient(135deg,#fff7cc,#ffe9a8)}
-body.phase-exercise{background:linear-gradient(135deg,#ffe0d1,#ffc2ae)}
-body.phase-rest{background:linear-gradient(135deg,#d8f2ff,#c4ebff)}
+body.phase-exercise{background:linear-gradient(135deg,#c8f5c8,#a8e6a8)}
+body.phase-rest{background:linear-gradient(135deg,#ffc4c4,#ffaaaa)}
 
 .timer-focus{
   position:fixed;
@@ -317,4 +317,26 @@ body.phase-rest{background:linear-gradient(135deg,#d8f2ff,#c4ebff)}
 
 .footer p {
   margin: 0;
+}
+
+/* Progress bar for exercise phase */
+.exercise-progress-container{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:8px;
+  background:rgba(0,0,0,0.1);
+  z-index:1000;
+  display:none;
+}
+.exercise-progress-bar{
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg,#4caf50,#81c784);
+  transition:width 1s linear;
+  border-radius:0 4px 4px 0;
+}
+body.phase-exercise .exercise-progress-container{
+  display:block;
 }
