@@ -59,6 +59,14 @@ body{font-family:Inter, Arial, sans-serif;margin:0;background:var(--bg1);color:#
   padding:18px;
   align-items:flex-start
 }
+
+body.timer-solo .left-panel,
+body.timer-solo .divider-visual,
+body.timer-solo .site-header,
+body.timer-solo .footer{display:none}
+
+body.timer-solo .rutina-main{max-width:760px;justify-content:center;min-height:100vh}
+body.timer-solo .right-panel{margin-left:0;flex:1}
 .left-panel{flex:1}
 .right-panel{flex:1;display:flex;justify-content:flex-start;margin-left:40px}
 .routine-card{
@@ -128,6 +136,61 @@ body{font-family:Inter, Arial, sans-serif;margin:0;background:var(--bg1);color:#
   text-align:center;
   margin-bottom:14px;
   font-weight:700;
+}
+
+.phase-badge{
+  display:inline-block;
+  margin-bottom:14px;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  background:#e2e8f0;
+  color:#334155;
+}
+
+.timer.phase-pulse{animation:pulseTimer 700ms ease}
+.timer.phase-pop{animation:popTimer 450ms ease}
+
+body.phase-preparation{background:linear-gradient(135deg,#fff7cc,#ffe9a8)}
+body.phase-exercise{background:linear-gradient(135deg,#ffe0d1,#ffc2ae)}
+body.phase-rest{background:linear-gradient(135deg,#d8f2ff,#c4ebff)}
+
+.timer-focus{
+  position:fixed;
+  inset:0;
+  z-index:999;
+  background:rgba(15,23,36,.8);
+  backdrop-filter:blur(2px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.timer-focus.hidden{display:none}
+
+.timer-focus-card{
+  background:#fff;
+  color:#0f1724;
+  border-radius:20px;
+  padding:24px 28px;
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+  text-align:center;
+  min-width:240px;
+}
+
+@keyframes pulseTimer{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
+}
+
+@keyframes popTimer{
+  0%{transform:scale(.8);opacity:.5}
+  100%{transform:scale(1);opacity:1}
 }
 
 .form-row{
