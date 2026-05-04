@@ -108,11 +108,12 @@ function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 let isPreparation = true;
 let isExercise = false;
 let isPaused = false;
-let preparationTime = 10;
+let preparationTime = 30;
 let exerciseTime = 60;
-let restTime = 10;
+let restTime = 30;
 let totalTime = 0;
 let interval;
+let milestone40Reached = false;
 
 function updateTimerDisplay(time) {
   const minutes = String(Math.floor(time / 60)).padStart(2, '0');
@@ -136,15 +137,34 @@ function loadConfetti() {
   }
 }
 
+function animateTimer(type = 'phase-pulse') {
+  const timerEl = document.getElementById("timer");
+  if (!timerEl) return;
+  timerEl.classList.remove('phase-pulse', 'phase-pop');
+  void timerEl.offsetWidth;
+  timerEl.classList.add(type);
+}
+
+function setPhaseBadge(label, tone) {
+  const badge = document.getElementById("phaseBadge");
+  if (!badge) return;
+  badge.textContent = label;
+  badge.style.background = tone.bg;
+  badge.style.color = tone.color;
+}
+
 // update visible background (override gradient)
 function updateBackground() {
-  // set background shorthand to override the gradient from CSS
+  document.body.classList.remove('phase-preparation', 'phase-exercise', 'phase-rest');
   if (isPreparation) {
-    document.body.style.background = "#f4b400";
+    document.body.classList.add('phase-preparation');
+    setPhaseBadge('Preparación activa', { bg: '#fde68a', color: '#7c2d12' });
   } else if (isExercise) {
-    document.body.style.background = "#ff5733";
+    document.body.classList.add('phase-exercise');
+    setPhaseBadge('Ejercicio', { bg: '#fecaca', color: '#7f1d1d' });
   } else {
-    document.body.style.background = "#33b5e5";
+    document.body.classList.add('phase-rest');
+    setPhaseBadge('Descanso', { bg: '#bfdbfe', color: '#1e3a8a' });
   }
 }
 
@@ -159,6 +179,7 @@ function startTimer() {
 
   const statusEl = document.getElementById("status");
   if (statusEl) statusEl.textContent = isPreparation ? "Preparación" : (isExercise ? "EJERCICIO GO! GO!" : "Descanso");
+  animateTimer('phase-pop');
 
   // immediately update bg
   updateBackground();
@@ -177,10 +198,11 @@ function startTimer() {
       alertSound && alertSound.play && alertSound.play().catch(e => console.log("Audio bloqueado o no disponible", e));
     }
 
-    if (totalTime === 2400) {
-      clearInterval(interval);
+    if (totalTime >= 2400 && !milestone40Reached) {
+      milestone40Reached = true;
       loadConfetti();
-      alert("¡Felicidades! Has completado 40 minutos de ejercicio 🎉");
+      setPhaseBadge('Meta 40 min cumplida 🏆', { bg: '#bbf7d0', color: '#14532d' });
+      setTimeout(() => alert("¡Felicidades! Has completado 40 minutos de ejercicio 🎉. Puedes continuar entrenando."), 150);
     }
 
     if (timeLeft === 0) {
@@ -195,6 +217,7 @@ function startTimer() {
       }
 
       startTimer();
+      animateTimer('phase-pulse');
     }
   }, 1000);
 }
@@ -248,6 +271,8 @@ document.addEventListener('DOMContentLoaded', function () {
   isPaused = false;
   isPreparation = true;
   isExercise = false;
+  milestone40Reached = false;
+  document.body.classList.add('timer-solo');
 
   // 🔊 desbloqueo de audio más limpio
   if (alertSound && alertSound.load) {
@@ -266,12 +291,13 @@ document.addEventListener('DOMContentLoaded', function () {
     isPreparation = true;
     isExercise = false;
     totalTime = 0;
+    milestone40Reached = false;
+    document.body.classList.remove('timer-solo');
     updateTimerDisplay(preparationTime);
     updateTotalTimeDisplay();
     const statusEl = document.getElementById("status");
     if (statusEl) statusEl.textContent = "Preparación";
-    // restore to the preparation color
-    document.body.style.background = "#f4b400";
+    updateBackground();
     pauseBtn && (pauseBtn.textContent = "PAUSA");
     isPaused = false;
   });
@@ -285,4 +311,5 @@ document.addEventListener('DOMContentLoaded', function () {
   renderModalList(day);
   updateTimerDisplay(preparationTime);
   updateTotalTimeDisplay();
+  updateBackground();
 });
