@@ -384,3 +384,14 @@ body.phase-rest{background:linear-gradient(135deg,#ffc4c4,#ffaaaa)}
 
 @media(max-width:520px){.choice-grid{grid-template-columns:1fr}.cfg-row{grid-template-columns:1fr 1fr}}
 body{min-height:100vh;background-attachment:fixed}
+
+/* ===== Marca Wil Fit Timer ===== */
+.brand{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:17px;color:#0f1724;text-decoration:none}
+.brand img{border-radius:8px}
+.brand span{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand.center{display:flex;justify-content:center;margin-bottom:6px}
+.header-inner .logo{border-radius:18px;box-shadow:0 8px 20px rgba(108,92,231,.3)}
+.site-header:not(.small) .header-inner{flex-direction:column;text-align:center;gap:6px}
+.site-header:not(.small) .header-inner h1{text-align:center;font-size:34px;flex:none}
+.site-header.small .header-inner h1{flex:none;font-size:18px;color:var(--muted)}
+.site-header.small .header-inner{justify-content:space-between}
