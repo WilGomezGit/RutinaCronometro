@@ -95,7 +95,7 @@
     running = false;
     cancelAnimationFrame(raf);
     unlockScreen();
-    document.title = 'Rutina — Wil';
+    document.title = 'Wil Fit Timer';
     const total = sets.reduce((s, x) => s + x.jumps, 0);
     const secs = sets.reduce((s, x) => s + x.dur, 0);
     $('sumTotal').textContent = total;
@@ -145,7 +145,7 @@
     ['jumpsNow', 'jumpsRate', 'jumpsSet'].forEach(i => $(i).textContent = '0');
     $('pauseButton').disabled = true; $('pauseButton').textContent = 'PAUSA';
     $('startButton').textContent = 'INICIO GO!';
-    document.title = 'Rutina — Wil';
+    document.title = 'Wil Fit Timer';
   }
 
   // --- Configuración ---

@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('dayTitle').textContent = capitalize(day);
-  document.getElementById('pageTitle').textContent = `Rutina — ${capitalize(day)}`;
+  document.getElementById('pageTitle').textContent = capitalize(day);
   document.getElementById('choiceTitle').textContent = `${capitalize(day)}: ¿qué quieres hacer?`;
 
   renderExercises(day);
