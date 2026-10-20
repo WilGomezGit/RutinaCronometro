@@ -3,65 +3,97 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#6c5ce7">
   <title>Rutina — Wil</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="site-header small">
+  <header class="site-header small" id="siteHeader">
     <div class="header-inner">
-      <a class="back" href="index.html">⬅️ Volver</a>
+      <a class="back" href="index.html">⬅️ Días</a>
       <h1 id="pageTitle">Rutina</h1>
-      <button id="editBtn" class="btn primary">✏️ Editar rutina</button>
     </div>
   </header>
 
-  <main class="rutina-main">
-    <!-- Panel izquierdo: lista de ejercicios -->
-    <section class="left-panel">
-      <div class="routine-card">
-        <h2 id="dayTitle">Lunes</h2>
-        <ul id="exerciseList" class="ex-list"></ul>
-        <div class="edit-actions">
-          <button id="addExerciseBtn" class="btn">+ Añadir ejercicio</button>
+  <!-- Selector: reloj o rutina -->
+  <main id="viewChoice" class="choice">
+    <h2 id="choiceTitle">¿Qué quieres hacer?</h2>
+    <div class="choice-grid">
+      <button class="choice-card" data-go="reloj"><span class="ico">⏱️</span><b>Reloj</b><small>Cronómetro de saltos con barra de tiempo y conteo</small></button>
+      <button class="choice-card" data-go="rutina"><span class="ico">📋</span><b>Ver rutina</b><small>Ejercicios del día</small></button>
+    </div>
+  </main>
+
+  <!-- Vista rutina -->
+  <main id="viewRutina" class="view hidden">
+    <div class="tabs"><button data-go="choice">Inicio</button><button data-go="reloj">⏱️ Reloj</button><button class="on">📋 Rutina</button></div>
+    <section class="routine-card">
+      <div class="card-head"><h2 id="dayTitle">Lunes</h2><button id="editBtn" class="btn primary">✏️ Editar</button></div>
+      <ul id="exerciseList" class="ex-list"></ul>
+      <div class="edit-actions"><button id="addExerciseBtn" class="btn">+ Añadir ejercicio</button></div>
+    </section>
+  </main>
+
+  <!-- Vista reloj -->
+  <main id="viewReloj" class="view hidden">
+    <div class="tabs"><button data-go="choice">Inicio</button><button class="on">⏱️ Reloj</button><button data-go="rutina">📋 Rutina</button></div>
+
+    <section class="timer-card">
+      <div id="clockScreen">
+        <div class="clock">
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="track" cx="100" cy="100" r="90"/>
+            <circle class="ring" id="ring" cx="100" cy="100" r="90"/>
+          </svg>
+          <div class="clock-inner">
+            <div class="phase" id="phase">Listo</div>
+            <div class="timer" id="timer">00:00</div>
+            <div class="round" id="round"></div>
+          </div>
         </div>
+
+        <div class="jumps">
+          <div><span id="jumpsNow">0</span><small>saltos</small></div>
+          <div><span id="jumpsRate">0</span><small>saltos/min</small></div>
+          <div><span id="jumpsSet">0</span><small>esta serie</small></div>
+        </div>
+
+        <div class="next" id="next"></div>
+        <div class="flat"><div id="totalBar"></div></div>
+        <div class="meta"><span id="elapsed">Transcurrido 00:00</span><span id="remaining">Restante 00:00</span></div>
+
+        <div class="buttons">
+          <button id="startButton" class="btn primary">INICIO GO!</button>
+          <button id="pauseButton" class="btn warning" disabled>PAUSA</button>
+          <button id="resetButton" class="btn danger">REINICIAR</button>
+        </div>
+      </div>
+
+      <!-- Resumen final -->
+      <div id="summary" class="summary hidden">
+        <div class="summary-emoji">🏆</div>
+        <h3>¡Rutina terminada!</h3>
+        <div class="summary-total"><span id="sumTotal">0</span><small>saltos en total</small></div>
+        <div class="summary-line" id="sumLine"></div>
+        <table class="summary-table"><thead><tr><th>Serie</th><th>Tiempo</th><th>Saltos</th></tr></thead><tbody id="sumRows"></tbody></table>
+        <div class="buttons"><button id="againButton" class="btn primary">Otra vez</button></div>
       </div>
     </section>
 
-    <div class="divider-visual"></div>
-
-    <!-- Panel derecho: temporizador -->
-    <section class="right-panel">
-      <div class="timer-card">
-        <h2 class="sr-only">Temporizador</h2>
-        <div class="timer-ui">
-          <div class="timer-title">CRONÓMETRO</div>
-          <div id="timer" class="timer">00:30</div>
-          <div id="status" class="status">Preparación</div>
-          <div id="phaseBadge" class="phase-badge">Listo para empezar</div>
-
-          <div class="form-row">
-            <label for="restTimeInput">Tiempo Descanso (segundos)</label>
-            <input type="number" id="restTimeInput" value="30" min="5" max="120">
-          </div>
-
-          <div class="form-row">
-            <label for="exerciseTimeInput">Tiempo Ejercicio (segundos)</label>
-            <input type="number" id="exerciseTimeInput" value="60" min="10" max="3600">
-          </div>
-
-          <div id="total-time" class="total-time">
-            <img src="assets/img/crono.svg" alt="Cronómetro" width="34" height="34" style="vertical-align: middle;">
-            <span id="totalTimeText">Tiempo TOTAL: 00:00</span>
-          </div>
-
-          <div class="buttons">
-            <button id="startButton" class="btn primary">INICIO GO!</button>
-            <button id="pauseButton" class="btn warning">PAUSA</button>
-            <button id="resetButton" class="btn danger">REINICIAR</button>
-          </div>
-        </div>
+    <details class="timer-card config" id="configBox">
+      <summary>⚙️ Configurar rutina</summary>
+      <div class="cfg-row">
+        <div><label for="cfgPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgPrep" min="0"></div>
+        <div><label for="cfgPost">Prepárate tras descanso (s)</label><input type="number" id="cfgPost" min="0"></div>
+        <div><label for="cfgCad">Saltos por minuto</label><input type="number" id="cfgCad" min="1" max="300"></div>
       </div>
-    </section>
+      <div id="blocks"></div>
+      <div class="buttons">
+        <button id="addBlock" class="btn">+ Bloque</button>
+        <button id="restoreCfg" class="btn">Restaurar mi rutina</button>
+      </div>
+      <p class="hint" id="cfgSummary"></p>
+    </details>
   </main>
 
   <!-- Modal edición de ejercicios -->
@@ -80,19 +112,17 @@
     </div>
   </div>
 
-    <footer class="footer">
-      <p>Creado por: Wil Gómez | 2025</p>
-      <p>Copyright © | Todos los derechos reservados</p>
-    </footer>
+  <footer class="footer" id="siteFooter">
+    <p>Creado por: Wil Gómez | 2025</p>
+    <p>Copyright © | Todos los derechos reservados</p>
+  </footer>
 
-
-  <!-- Sonido alerta -->
-  <audio id="alertSound" src="assets/sounds/alert.mp3"></audio>
+  <audio id="alertSound" src="assets/sounds/alert.mp3" preload="auto"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/ejercicios.js"></script>
+  <script src="js/reloj.js"></script>
   <script src="js/rutina.js"></script>
-  <div class="exercise-progress-container" id="exerciseProgressContainer">
-    <div class="exercise-progress-bar" id="exerciseProgressBar"></div>
-  </div>
 </body>
 </html>
