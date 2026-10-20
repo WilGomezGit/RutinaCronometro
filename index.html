@@ -1,59 +1,90 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#5B47E0">
   <title>Wil Fit Timer</title>
   <link rel="icon" type="image/svg+xml" href="assets/img/logo-icon.svg">
   <link rel="apple-touch-icon" href="assets/img/logo-icon.svg">
-  <meta name="theme-color" content="#6c5ce7">
-  <link rel="stylesheet" href="css/styles.css?v=1792534001">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1792536367">
 </head>
 <body>
-  <header class="site-header">
-    <div class="header-inner">
-      <img class="logo" src="assets/img/logo-icon.svg" alt="" width="72" height="72">
-      <h1>Wil Fit Timer</h1>
-      <p class="subtitle">Rutinas semanales con reloj inteligente · Elige tu día</p>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="14" r="7"/><path d="M12 14V11"/><path d="M10 3h4"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 10h6"/><path d="M9 14h6"/><path d="M9 18h3"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h4"/><path d="M12 12h8"/><circle cx="10" cy="12" r="2"/><path d="M4 18h12"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="topbar-in">
+      <a class="logo" href="index.html"><img src="assets/img/logo-icon.svg" alt=""><span>Wil Fit Timer</span></a>
+      <nav class="mainnav" aria-label="Principal">
+        <a href="index.html" aria-current="page"><svg class="ico"><use href="#i-home"/></svg>Inicio</a>
+        <a id="navReloj" href="rutina.html#reloj"><svg class="ico"><use href="#i-clock"/></svg>Reloj</a>
+        <a id="navRutina" href="rutina.html#rutina"><svg class="ico"><use href="#i-list"/></svg>Rutina</a>
+        <a id="navConfig" href="rutina.html#config"><svg class="ico"><use href="#i-sliders"/></svg>Configurar</a>
+      </nav>
+      <span class="daylabel" id="dayLabel"></span>
     </div>
   </header>
 
-  <main class="days-grid">
-    <a class="day-card" href="rutina.html?dia=lunes">
-      <div class="day-icon">🏋️‍♂️</div>
-      <div class="day-name">Lunes</div>
-      <div class="day-sub">Pecho · Tríceps</div>
-    </a>
+  <main class="view home">
+    <section class="home-main">
+      <div class="page-head">
+        <div class="eyebrow">Hoy · <span id="dayName">Lunes</span></div>
+        <h1>¿Qué quieres hacer hoy?</h1>
+      </div>
 
-    <a class="day-card" href="rutina.html?dia=martes">
-      <div class="day-icon">🦵</div>
-      <div class="day-name">Martes</div>
-      <div class="day-sub">Piernas · Glúteos</div>
-    </a>
+      <nav class="days" id="days" aria-label="Días de la semana"></nav>
 
-    <a class="day-card" href="rutina.html?dia=miercoles">
-      <div class="day-icon">💪</div>
-      <div class="day-name">Miércoles</div>
-      <div class="day-sub">Espalda · Bíceps</div>
-    </a>
+      <div class="today">
+        <div class="today-top">
+          <div><small>Rutina de <span id="dayName2">Lunes</span></small><strong>Saltos por series</strong></div>
+          <span class="today-badge">Lista</span>
+        </div>
+        <div class="today-stats">
+          <div><span id="stSeries">0</span><small>series</small></div>
+          <div><span id="stDur">00:00</span><small>duración</small></div>
+          <div><span id="stJumps">≈0</span><small>saltos</small></div>
+        </div>
+        <div class="today-segs" id="segs" aria-hidden="true"></div>
+        <div class="today-cta">
+          <a class="cta main" id="goReloj" href="rutina.html#reloj"><svg class="ico fill"><use href="#i-play"/></svg>Iniciar reloj</a>
+          <a class="cta alt" id="goRutina0" href="rutina.html#rutina">Ver ejercicios</a>
+        </div>
+      </div>
+    </section>
 
-    <a class="day-card" href="rutina.html?dia=jueves">
-      <div class="day-icon">🤸‍♂️</div>
-      <div class="day-name">Jueves</div>
-      <div class="day-sub">Hombros · Core</div>
-    </a>
-
-    <a class="day-card" href="rutina.html?dia=viernes">
-      <div class="day-icon">⚡</div>
-      <div class="day-name">Viernes</div>
-      <div class="day-sub">Full body · Cardio</div>
-    </a>
+    <aside class="quick">
+      <h2>Accesos rápidos</h2>
+      <a class="qlink q-reloj" id="goReloj2" href="rutina.html#reloj">
+        <span class="qicon a"><svg class="ico"><use href="#i-clock"/></svg></span>
+        <span class="qtxt"><b>Reloj</b><small>Cronómetro de saltos con barra de tiempo y conteo</small></span>
+        <svg class="ico chev"><use href="#i-chev"/></svg>
+      </a>
+      <a class="qlink" id="goRutina" href="rutina.html#rutina">
+        <span class="qicon b"><svg class="ico"><use href="#i-list"/></svg></span>
+        <span class="qtxt"><b>Ver rutina</b><small>Ejercicios del día</small></span>
+        <svg class="ico chev"><use href="#i-chev"/></svg>
+      </a>
+      <a class="qlink" id="goConfig" href="rutina.html#config">
+        <span class="qicon c"><svg class="ico"><use href="#i-sliders"/></svg></span>
+        <span class="qtxt"><b>Configurar rutina</b><small>Series, tiempos y descansos</small></span>
+        <svg class="ico chev"><use href="#i-chev"/></svg>
+      </a>
+    </aside>
   </main>
 
-  <footer class="footer">
-    <p>Creado por: Wil Gómez | 2025</p>
-    <p>Copyright © | Todos los derechos reservados</p>
-  </footer>
+  <footer class="footer"><span>Creado por Wil Gómez · 2025</span><span>© Todos los derechos reservados</span></footer>
 
+  <script src="js/config.js?v=1792536367"></script>
+  <script src="js/inicio.js?v=1792536367"></script>
 </body>
 </html>
