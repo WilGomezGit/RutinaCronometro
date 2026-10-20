@@ -319,24 +319,68 @@ body.phase-rest{background:linear-gradient(135deg,#ffc4c4,#ffaaaa)}
   margin: 0;
 }
 
-/* Progress bar for exercise phase */
-.exercise-progress-container{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:8px;
-  background:rgba(0,0,0,0.1);
-  z-index:1000;
-  display:none;
-}
-.exercise-progress-bar{
-  height:100%;
-  width:100%;
-  background:linear-gradient(90deg,#4caf50,#81c784);
-  transition:width 1s linear;
-  border-radius:0 4px 4px 0;
-}
-body.phase-exercise .exercise-progress-container{
-  display:block;
-}
+
+/* ===== Navegación y vistas ===== */
+.hidden{display:none !important}
+.choice{max-width:760px;margin:30px auto;padding:0 16px;text-align:center}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+.choice-card{background:var(--card);border:0;border-radius:18px;padding:36px 16px;cursor:pointer;
+  box-shadow:0 10px 30px rgba(16,24,40,.08);font:inherit;display:flex;flex-direction:column;gap:8px;align-items:center;transition:transform .18s}
+.choice-card:hover{transform:translateY(-5px)}
+.choice-card .ico{font-size:46px}
+.choice-card b{font-size:22px}
+.choice-card small{color:var(--muted)}
+.view{max-width:560px;margin:14px auto;padding:0 14px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs button{flex:1;padding:10px;border:0;border-radius:10px;background:rgba(255,255,255,.7);font:inherit;font-weight:600;cursor:pointer}
+.tabs button.on{background:var(--card);box-shadow:0 4px 14px rgba(16,24,40,.12)}
+.card-head{display:flex;justify-content:space-between;align-items:center}
+.btn.small{padding:6px 10px;font-size:13px}
+.timer-card{display:block;margin-bottom:14px;text-align:center}
+
+/* ===== Reloj ===== */
+.clock{position:relative;width:min(76vw,320px);aspect-ratio:1;margin:6px auto 14px}
+.clock svg{width:100%;height:100%;transform:rotate(-90deg)}
+.clock circle{fill:none;stroke-width:13}
+.clock .track{stroke:rgba(2,6,23,.08)}
+.clock .ring{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:565.49;transition:stroke .3s}
+[data-phase=work] .ring{stroke:var(--success)}
+[data-phase=rest] .ring{stroke:#3b82f6}
+[data-phase=prep] .ring,[data-phase=ready] .ring{stroke:var(--warning)}
+.clock-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.clock .timer{font-size:clamp(50px,16vw,76px);margin:0;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+.clock .phase{font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:18px;color:var(--muted)}
+[data-phase=work] .phase{color:var(--success)}
+[data-phase=rest] .phase{color:#3b82f6}
+[data-phase=prep] .phase,[data-phase=ready] .phase{color:var(--warning)}
+.round{color:var(--muted);font-size:14px;margin-top:2px}
+.jumps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 12px}
+.jumps div{background:#f8fafc;border-radius:12px;padding:10px 4px}
+.jumps span{display:block;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.jumps small{color:var(--muted);font-size:12px}
+.next{color:var(--muted);min-height:22px;margin-bottom:8px;font-size:14px}
+.flat{height:8px;border-radius:4px;background:rgba(2,6,23,.08);overflow:hidden}
+.flat>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .3s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:4px}
+.buttons .btn:disabled{opacity:.45;cursor:default}
+.buttons{flex-wrap:wrap}
+
+/* ===== Resumen ===== */
+.summary-emoji{font-size:54px}
+.summary-total span{display:block;font-size:72px;font-weight:800;line-height:1;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.summary-total small{color:var(--muted)}
+.summary-line{color:var(--muted);margin:10px 0 14px;font-size:14px}
+.summary-table{width:100%;border-collapse:collapse;margin-bottom:10px}
+.summary-table th,.summary-table td{padding:7px;border-bottom:1px solid rgba(2,6,23,.06)}
+.summary-table th{color:var(--muted);font-size:12px;text-transform:uppercase}
+
+/* ===== Configuración ===== */
+.config summary{cursor:pointer;font-weight:700;text-align:left}
+.cfg-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.config label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;text-align:left}
+.config input[type=number]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(2,6,23,.12);text-align:center;font-size:16px}
+.block{display:grid;grid-template-columns:repeat(3,1fr) 44px;gap:8px;align-items:end;margin-bottom:10px}
+.hint{color:var(--muted);font-size:13px;margin:12px 0 0}
+
+@media(max-width:520px){.choice-grid{grid-template-columns:1fr}.cfg-row{grid-template-columns:1fr 1fr}}
+body{min-height:100vh;background-attachment:fixed}
