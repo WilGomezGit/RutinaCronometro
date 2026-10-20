@@ -1,132 +1,183 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#6c5ce7">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#5B47E0">
   <title>Wil Fit Timer</title>
   <link rel="icon" type="image/svg+xml" href="assets/img/logo-icon.svg">
   <link rel="apple-touch-icon" href="assets/img/logo-icon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=1792534001">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=1792536367">
 </head>
 <body>
-  <header class="site-header small" id="siteHeader">
-    <div class="header-inner">
-      <a class="back" href="index.html">⬅️ Días</a>
-      <a class="brand" href="index.html"><img src="assets/img/logo-icon.svg" alt="" width="30" height="30"><span>Wil Fit Timer</span></a>
-      <h1 id="pageTitle">Rutina</h1>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="14" r="7"/><path d="M12 14V11"/><path d="M10 3h4"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 10h6"/><path d="M9 14h6"/><path d="M9 18h3"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h4"/><path d="M12 12h8"/><circle cx="10" cy="12" r="2"/><path d="M4 18h12"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></symbol>
+    <symbol id="i-skip" viewBox="0 0 24 24"><path d="M5 5l10 7-10 7z"/><path d="M19 5v14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="topbar-in">
+      <a class="logo" href="index.html" id="logoLink" data-leave><img src="assets/img/logo-icon.svg" alt=""><span>Wil Fit Timer</span></a>
+      <nav class="mainnav" aria-label="Principal">
+        <a href="index.html" id="navInicio" data-leave><svg class="ico"><use href="#i-home"/></svg>Inicio</a>
+        <button type="button" data-go="reloj"><svg class="ico"><use href="#i-clock"/></svg>Reloj</button>
+        <button type="button" data-go="rutina"><svg class="ico"><use href="#i-list"/></svg>Rutina</button>
+        <button type="button" data-go="config"><svg class="ico"><use href="#i-sliders"/></svg>Configurar</button>
+      </nav>
+      <span class="daylabel" id="dayLabel"></span>
     </div>
   </header>
 
-  <!-- Selector: reloj o rutina -->
-  <main id="viewChoice" class="choice">
-    <h2 id="choiceTitle">¿Qué quieres hacer?</h2>
-    <div class="choice-grid">
-      <button class="choice-card" data-go="reloj"><span class="ico">⏱️</span><b>Reloj</b><small>Cronómetro de saltos con barra de tiempo y conteo</small></button>
-      <button class="choice-card" data-go="rutina"><span class="ico">📋</span><b>Ver rutina</b><small>Ejercicios del día</small></button>
-    </div>
-  </main>
+  <!-- ===== Reloj ===== -->
+  <main id="viewReloj" class="view hidden" data-phase="prep">
+    <div id="clockScreen" class="reloj-grid">
+      <section class="reloj-main" aria-label="Cronómetro">
+        <div class="clock-card">
+          <div class="chips">
+            <span class="chip chip-phase" id="phaseChip">Listo</span>
+            <span class="chip" id="serieChip">Serie 0 de 0</span>
+          </div>
 
-  <!-- Vista rutina -->
-  <main id="viewRutina" class="view hidden">
-    <div class="tabs"><button data-go="choice">Inicio</button><button data-go="reloj">⏱️ Reloj</button><button class="on">📋 Rutina</button></div>
-    <section class="routine-card">
-      <div class="card-head"><h2 id="dayTitle">Lunes</h2><button id="editBtn" class="btn primary">✏️ Editar</button></div>
-      <ul id="exerciseList" class="ex-list"></ul>
-      <div class="edit-actions"><button id="addExerciseBtn" class="btn">+ Añadir ejercicio</button></div>
-    </section>
-  </main>
+          <div class="ring">
+            <svg viewBox="0 0 360 360" aria-hidden="true">
+              <circle class="face" cx="180" cy="180" r="164" style="stroke:none"/>
+              <circle class="track" cx="180" cy="180" r="164"/>
+              <circle class="arc" id="ring" cx="180" cy="180" r="164"/>
+            </svg>
+            <div class="ring-in" role="timer" aria-live="off">
+              <span class="lbl" id="phase">Listo</span>
+              <span class="time" id="timer">00:00</span>
+              <span class="next" id="next"></span>
+            </div>
+          </div>
 
-  <!-- Vista reloj -->
-  <main id="viewReloj" class="view hidden">
-    <div class="tabs"><button data-go="choice">Inicio</button><button class="on">⏱️ Reloj</button><button data-go="rutina">📋 Rutina</button></div>
-
-    <section class="timer-card">
-      <div class="brand center"><img src="assets/img/logo-icon.svg" alt="" width="30" height="30"><span>Wil Fit Timer</span></div>
-      <div id="clockScreen">
-        <div class="clock">
-          <svg viewBox="0 0 200 200" aria-hidden="true">
-            <circle class="track" cx="100" cy="100" r="90"/>
-            <circle class="ring" id="ring" cx="100" cy="100" r="90"/>
-          </svg>
-          <div class="clock-inner">
-            <div class="phase" id="phase">Listo</div>
-            <div class="timer" id="timer">00:00</div>
-            <div class="round" id="round"></div>
+          <div class="controls">
+            <button type="button" class="ctl" id="resetButton" aria-label="Reiniciar"><svg class="ico"><use href="#i-reset"/></svg><span class="lbl-t">Reiniciar</span></button>
+            <button type="button" class="ctl play" id="startButton" data-state="play">
+              <svg class="ico fill i-play"><use href="#i-play"/></svg><svg class="ico fill i-pause"><use href="#i-pause"/></svg>
+              <span id="startLabel">Iniciar</span>
+            </button>
+            <button type="button" class="ctl" id="skipButton" aria-label="Siguiente fase" disabled><span class="lbl-t">Siguiente fase</span><svg class="ico"><use href="#i-skip"/></svg></button>
           </div>
         </div>
 
-        <div class="jumps">
+        <div class="timeline-card">
+          <div class="tl-head">
+            <b>Línea de tiempo</b>
+            <span class="legend">
+              <span><i style="background:#059669"></i>Ejercicio</span>
+              <span><i style="background:#2563EB"></i>Descanso</span>
+              <span><i style="background:#D97706"></i>Inicio</span>
+            </span>
+          </div>
+          <div class="timeline" id="timeline" aria-hidden="true"></div>
+          <div class="tl-meta"><span id="elapsed">Total 00:00</span><span id="remaining">Restante 00:00</span></div>
+        </div>
+      </section>
+
+      <aside class="reloj-side">
+        <div class="acc-pair">
+          <div class="acc work">
+            <span class="acc-t"><i></i>Minutos de ejercicio</span>
+            <span class="acc-v" id="workClock">00:00</span>
+            <span class="bar"><b id="workBar"></b></span>
+            <span class="acc-n" id="workNote">de 00:00 activos</span>
+          </div>
+          <div class="acc rest">
+            <span class="acc-t"><i></i>Minutos de descanso</span>
+            <span class="acc-v" id="restClock">00:00</span>
+            <span class="bar"><b id="restBar"></b></span>
+            <span class="acc-n" id="restNote">de 00:00 de descanso</span>
+          </div>
+        </div>
+
+        <div class="stats">
           <div><span id="jumpsNow">0</span><small>saltos</small></div>
           <div><span id="jumpsRate">0</span><small>saltos/min</small></div>
           <div><span id="jumpsSet">0</span><small>esta serie</small></div>
         </div>
 
-        <div class="next" id="next"></div>
-        <div class="flat"><div id="totalBar"></div></div>
-        <div class="meta"><span id="elapsed">Transcurrido 00:00</span><span id="remaining">Restante 00:00</span></div>
-
-        <div class="buttons">
-          <button id="startButton" class="btn primary">INICIO GO!</button>
-          <button id="pauseButton" class="btn warning" disabled>PAUSA</button>
-          <button id="resetButton" class="btn danger">REINICIAR</button>
+        <div class="series-card">
+          <header><h2>Series</h2><button type="button" data-go="config">Configurar</button></header>
+          <div id="seriesList"></div>
         </div>
-      </div>
+      </aside>
+    </div>
 
-      <!-- Resumen final -->
-      <div id="summary" class="summary hidden">
-        <div class="summary-emoji">🏆</div>
-        <h3>¡Rutina terminada!</h3>
-        <div class="summary-total"><span id="sumTotal">0</span><small>saltos en total</small></div>
-        <div class="summary-line" id="sumLine"></div>
-        <table class="summary-table"><thead><tr><th>Serie</th><th>Tiempo</th><th>Saltos</th></tr></thead><tbody id="sumRows"></tbody></table>
-        <div class="buttons"><button id="againButton" class="btn primary">Otra vez</button></div>
-      </div>
+    <!-- Resumen final -->
+    <section id="summary" class="summary card hidden">
+      <h2>¡Rutina terminada!</h2>
+      <div class="summary-total" id="sumTotal">0</div>
+      <div class="summary-lbl">saltos en total</div>
+      <p class="hint" id="sumLine"></p>
+      <table class="summary-table"><thead><tr><th>Serie</th><th>Tiempo</th><th>Saltos</th></tr></thead><tbody id="sumRows"></tbody></table>
+      <button type="button" class="btn primary" id="againButton">Otra vez</button>
     </section>
+  </main>
 
-    <details class="timer-card config" id="configBox">
-      <summary>⚙️ Configurar rutina</summary>
+  <!-- ===== Rutina (ejercicios) ===== -->
+  <main id="viewRutina" class="view hidden">
+    <div class="page-head"><div class="eyebrow">Ejercicios del día</div><h1 id="dayTitle">Lunes</h1></div>
+    <section class="card ex-card">
+      <div class="card-head"><h2>Lista</h2><button type="button" id="editBtn" class="btn primary">Editar</button></div>
+      <ul id="exerciseList" class="ex-list"></ul>
+      <div class="edit-actions"><button type="button" id="addExerciseBtn" class="btn">+ Añadir ejercicio</button></div>
+    </section>
+  </main>
+
+  <!-- ===== Configurar ===== -->
+  <main id="viewConfig" class="view hidden">
+    <div class="page-head"><div class="eyebrow">Series, tiempos y descansos</div><h1>Configurar rutina</h1></div>
+    <section class="card cfg">
       <div class="cfg-row">
-        <div><label for="cfgPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgPrep" min="0"></div>
-        <div><label for="cfgPost">Prepárate tras descanso (s)</label><input type="number" id="cfgPost" min="0"></div>
-        <div><label for="cfgCad">Saltos por minuto</label><input type="number" id="cfgCad" min="1" max="300"></div>
+        <div><label for="cfgPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgPrep" min="0" inputmode="numeric"></div>
+        <div><label for="cfgPost">Prepárate tras descanso (s)</label><input type="number" id="cfgPost" min="0" inputmode="numeric"></div>
+        <div><label for="cfgCad">Saltos por minuto</label><input type="number" id="cfgCad" min="1" max="300" inputmode="numeric"></div>
       </div>
       <div id="blocks"></div>
-      <div class="buttons">
-        <button id="addBlock" class="btn">+ Bloque</button>
-        <button id="restoreCfg" class="btn">Restaurar mi rutina</button>
+      <div class="cfg-actions">
+        <button type="button" id="addBlock" class="btn">+ Bloque</button>
+        <button type="button" id="restoreCfg" class="btn">Restaurar mi rutina</button>
       </div>
       <p class="hint" id="cfgSummary"></p>
-    </details>
+      <button type="button" class="btn primary" data-go="reloj">Ir al reloj</button>
+    </section>
   </main>
 
   <!-- Modal edición de ejercicios -->
   <div id="modal" class="modal hidden" aria-hidden="true">
-    <div class="modal-panel">
-      <h3>Editar rutina - <span id="modalDay">Lunes</span></h3>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">Editar rutina - <span id="modalDay">Lunes</span></h3>
       <div id="modalList"></div>
       <div class="modal-actions">
-        <input id="newExerciseInput" placeholder="Nombre del ejercicio (ej: Sentadillas - 3x12)">
-        <button id="addNewExercise" class="btn">Agregar</button>
+        <input id="newExerciseInput" type="text" placeholder="Nombre del ejercicio (ej: Sentadillas - 3x12)">
+        <button type="button" id="addNewExercise" class="btn">Agregar</button>
       </div>
       <div class="modal-footer">
-        <button id="saveModal" class="btn primary">Guardar</button>
-        <button id="closeModal" class="btn">Cerrar</button>
+        <button type="button" id="saveModal" class="btn primary">Guardar</button>
+        <button type="button" id="closeModal" class="btn">Cerrar</button>
       </div>
     </div>
   </div>
 
-  <footer class="footer" id="siteFooter">
-    <p>Creado por: Wil Gómez | 2025</p>
-    <p>Copyright © | Todos los derechos reservados</p>
-  </footer>
+  <footer class="footer"><span>Creado por Wil Gómez · 2025</span><span>© Todos los derechos reservados</span></footer>
 
   <audio id="alertSound" src="assets/sounds/alert.mp3" preload="auto"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="js/config.js?v=1792534001"></script>
-  <script src="js/ejercicios.js?v=1792534001"></script>
-  <script src="js/reloj.js?v=1792534001"></script>
-  <script src="js/rutina.js?v=1792534001"></script>
+  <script src="js/config.js?v=1792536367"></script>
+  <script src="js/ejercicios.js?v=1792536367"></script>
+  <script src="js/reloj.js?v=1792536367"></script>
+  <script src="js/rutina.js?v=1792536367"></script>
 </body>
 </html>
