@@ -368,6 +368,7 @@
   function renderConfig() {
     const c = loadConfig(day);
     $('cfgPrep').value = c.prep; $('cfgPost').value = c.postRest; $('cfgCad').value = c.cadence;
+    $('cfgPostOn').checked = c.postRestOn; $('cfgPostField').classList.toggle('off', !c.postRestOn);
     $('cfgOOn').checked = c.others.enabled; $('cfgOWork').value = c.others.work; $('cfgORest').value = c.others.rest;
     $('cfgOFields').classList.toggle('off', !c.others.enabled);
     $('blocks').innerHTML = c.blocks.map((b, i) => `
@@ -394,7 +395,8 @@
 
   function initConfig() {
     $('cfgPrep').addEventListener('input', e => mutate(c => c.prep = num(e.target.value, 0)));
-    $('cfgPost').addEventListener('input', e => mutate(c => c.postRest = num(e.target.value, 0)));
+    $('cfgPostOn').addEventListener('change', e => mutate(c => c.postRestOn = e.target.checked, true));
+    $('cfgPost').addEventListener('input', e => mutate(c => c.postRest = num(e.target.value, 1)));
     $('cfgCad').addEventListener('input', e => mutate(c => c.cadence = num(e.target.value, 1)));
     $('cfgOOn').addEventListener('change', e => mutate(c => c.others.enabled = e.target.checked, true));
     $('cfgOWork').addEventListener('input', e => mutate(c => c.others.work = num(e.target.value, 1)));
