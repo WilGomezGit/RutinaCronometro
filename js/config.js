@@ -7,7 +7,10 @@ const DEFAULT_CONFIG = {
     { work: 60,  rest: 40,  reps: 5 },
     { work: 120, rest: 60,  reps: 2 },
     { work: 240, rest: 120, reps: 1 }
-  ]
+  ],
+  // Otros ejercicios (pesas, etc.): van después de la cuerda, sin preparación,
+  // y se repiten ejercicio → descanso hasta pulsar "Terminar rutina"
+  others: { enabled: true, work: 45, rest: 30 }
 };
 
 function cfgKey(day) { return `reloj_${day}`; }
@@ -15,7 +18,7 @@ function cfgKey(day) { return `reloj_${day}`; }
 function loadConfig(day) {
   try {
     const c = JSON.parse(localStorage.getItem(cfgKey(day)));
-    if (c && Array.isArray(c.blocks) && c.blocks.length) return { ...DEFAULT_CONFIG, ...c };
+    if (c && Array.isArray(c.blocks) && c.blocks.length) return { ...DEFAULT_CONFIG, ...c, others: { ...DEFAULT_CONFIG.others, ...c.others } };
   } catch (e) { /* localStorage no disponible */ }
   return structuredClone(DEFAULT_CONFIG);
 }
