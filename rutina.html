@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=1792643094">
+  <link rel="stylesheet" href="css/styles.css?v=1792643604">
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -147,7 +147,11 @@
           <div><label for="cfgPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgPrep" min="0" inputmode="numeric"></div>
           <div><label for="cfgCad">Saltos por minuto</label><input type="number" id="cfgCad" min="1" max="300" inputmode="numeric"></div>
         </div>
-        <p class="hint">La preparación solo ocurre una vez, al iniciar el reloj. Después de cada descanso entras directo al siguiente ejercicio.</p>
+        <label class="switch"><input type="checkbox" id="cfgPostOn"><span>Cuenta de preparación después de cada descanso</span></label>
+        <div class="cfg-row two off" id="cfgPostField">
+          <div><label for="cfgPost">Segundos de preparación tras descanso</label><input type="number" id="cfgPost" min="1" inputmode="numeric"></div>
+        </div>
+        <p class="hint">Apagado: después de cada descanso entras directo al siguiente ejercicio. La preparación inicial solo ocurre una vez, al iniciar el reloj.</p>
         <div id="blocks"></div>
         <div class="cfg-actions">
           <button type="button" id="addBlock" class="btn">+ Bloque</button>
@@ -186,14 +190,14 @@
     </div>
   </div>
 
-  <footer class="footer"><span>Creado por Wil Gómez · 2025</span><span>© Todos los derechos reservados</span></footer>
+  <footer class="footer"><span>Creado por Wil Gómez · 2025</span><span>© Todos los derechos reservados · v9</span></footer>
 
   <audio id="alertSound" src="assets/sounds/alert.mp3" preload="auto"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="js/config.js?v=1792643094"></script>
-  <script src="js/ejercicios.js?v=1792643094"></script>
-  <script src="js/reloj.js?v=1792643094"></script>
-  <script src="js/rutina.js?v=1792643094"></script>
+  <script src="js/config.js?v=1792643604"></script>
+  <script src="js/ejercicios.js?v=1792643604"></script>
+  <script src="js/reloj.js?v=1792643604"></script>
+  <script src="js/rutina.js?v=1792643604"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 // Configuración del reloj (se guarda por día en localStorage)
 const DEFAULT_CONFIG = {
   prep: 10,        // segundos de preparación, solo al iniciar el reloj
+  postRestOn: false, // cuenta de preparación después de cada descanso (apagada por defecto)
+  postRest: 10,    // segundos de esa cuenta, si se activa
   cadence: 140,    // saltos por minuto (130–150 aprox.)
   blocks: [
     { work: 60,  rest: 40,  reps: 5 },
@@ -43,6 +45,7 @@ function buildPhases(cfg) {
       phases.push({ type: 'work', label: 'SALTA', dur: b.work, block: bi, rep: r, n, total });
       if (n < total) {
         if (b.rest > 0) phases.push({ type: 'rest', label: 'Descanso', dur: b.rest, n, total });
+        if (cfg.postRestOn && cfg.postRest > 0) phases.push({ type: 'ready', label: 'Prepárate', dur: cfg.postRest, n, total });
       }
     }
   });
