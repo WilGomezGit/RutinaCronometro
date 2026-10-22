@@ -14,10 +14,10 @@
   let sets = [], otherSets = [], otherCount = 0;   // resultados por serie / por ejercicio
 
   // --- Presentación ---
-  const NAME = { prep: 'Prepárate', ready: 'Prepárate', work: 'Activo', rest: 'Descansa' };
-  const CHIP = { prep: 'Preparación', ready: 'Preparación', work: 'Ejercicio', rest: 'Descanso' };
-  const NEXT = { prep: 'Prepárate', ready: 'Prepárate', work: 'Ejercicio', rest: 'Descanso' };
-  const BODY = { prep: 'phase-preparation', ready: 'phase-preparation', work: 'phase-exercise', rest: 'phase-rest' };
+  const NAME = { prep: 'Prepárate', work: 'Activo', rest: 'Descansa' };
+  const CHIP = { prep: 'Preparación', work: 'Ejercicio', rest: 'Descanso' };
+  const NEXT = { prep: 'Prepárate', work: 'Ejercicio', rest: 'Descanso' };
+  const BODY = { prep: 'phase-preparation', work: 'phase-exercise', rest: 'phase-rest' };
   const BODY_ALL = ['phase-preparation', 'phase-exercise', 'phase-rest'];
   let workTotal = 0, restTotal = 0, totalSeries = 0, lastNotes = ['', ''];
   let segEls = [], seriesInfo = [], seriesEls = [];
@@ -132,7 +132,7 @@
 
   function setPhaseUI(p) {
     const type = p ? p.type : 'prep';
-    $('viewReloj').dataset.phase = type === 'ready' ? 'prep' : type;
+    $('viewReloj').dataset.phase = type;
     document.body.classList.remove(...BODY_ALL);
     document.body.classList.add(BODY[type]);
     $('phase').textContent = p ? NAME[type] : 'Listo';
@@ -367,7 +367,7 @@
 
   function renderConfig() {
     const c = loadConfig(day);
-    $('cfgPrep').value = c.prep; $('cfgPost').value = c.postRest; $('cfgCad').value = c.cadence;
+    $('cfgPrep').value = c.prep; $('cfgCad').value = c.cadence;
     $('cfgOOn').checked = c.others.enabled; $('cfgOWork').value = c.others.work; $('cfgORest').value = c.others.rest;
     $('cfgOFields').classList.toggle('off', !c.others.enabled);
     $('blocks').innerHTML = c.blocks.map((b, i) => `
@@ -394,7 +394,6 @@
 
   function initConfig() {
     $('cfgPrep').addEventListener('input', e => mutate(c => c.prep = num(e.target.value, 0)));
-    $('cfgPost').addEventListener('input', e => mutate(c => c.postRest = num(e.target.value, 0)));
     $('cfgCad').addEventListener('input', e => mutate(c => c.cadence = num(e.target.value, 1)));
     $('cfgOOn').addEventListener('change', e => mutate(c => c.others.enabled = e.target.checked, true));
     $('cfgOWork').addEventListener('input', e => mutate(c => c.others.work = num(e.target.value, 1)));
