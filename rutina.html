@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=1792536367">
+  <link rel="stylesheet" href="css/styles.css?v=1792642591">
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -56,7 +56,7 @@
             </svg>
             <div class="ring-in" role="timer" aria-live="off">
               <span class="lbl" id="phase">Listo</span>
-              <span class="time" id="timer">00:00</span>
+              <span class="time roll" id="timer" data-value="00:00">00:00</span>
               <span class="next" id="next"></span>
             </div>
           </div>
@@ -69,6 +69,7 @@
             </button>
             <button type="button" class="ctl" id="skipButton" aria-label="Siguiente fase" disabled><span class="lbl-t">Siguiente fase</span><svg class="ico"><use href="#i-skip"/></svg></button>
           </div>
+          <button type="button" class="linkbtn hidden" id="finishButton">Terminar rutina</button>
         </div>
 
         <div class="timeline-card">
@@ -89,13 +90,13 @@
         <div class="acc-pair">
           <div class="acc work">
             <span class="acc-t"><i></i>Minutos de ejercicio</span>
-            <span class="acc-v" id="workClock">00:00</span>
+            <span class="acc-v roll" id="workClock" data-value="00:00">00:00</span>
             <span class="bar"><b id="workBar"></b></span>
             <span class="acc-n" id="workNote">de 00:00 activos</span>
           </div>
           <div class="acc rest">
             <span class="acc-t"><i></i>Minutos de descanso</span>
-            <span class="acc-v" id="restClock">00:00</span>
+            <span class="acc-v roll" id="restClock" data-value="00:00">00:00</span>
             <span class="bar"><b id="restBar"></b></span>
             <span class="acc-n" id="restNote">de 00:00 de descanso</span>
           </div>
@@ -120,6 +121,7 @@
       <div class="summary-total" id="sumTotal">0</div>
       <div class="summary-lbl">saltos en total</div>
       <p class="hint" id="sumLine"></p>
+      <p class="hint" id="sumLine2"></p>
       <table class="summary-table"><thead><tr><th>Serie</th><th>Tiempo</th><th>Saltos</th></tr></thead><tbody id="sumRows"></tbody></table>
       <button type="button" class="btn primary" id="againButton">Otra vez</button>
     </section>
@@ -138,20 +140,35 @@
   <!-- ===== Configurar ===== -->
   <main id="viewConfig" class="view hidden">
     <div class="page-head"><div class="eyebrow">Series, tiempos y descansos</div><h1>Configurar rutina</h1></div>
-    <section class="card cfg">
-      <div class="cfg-row">
-        <div><label for="cfgPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgPrep" min="0" inputmode="numeric"></div>
-        <div><label for="cfgPost">Prepárate tras descanso (s)</label><input type="number" id="cfgPost" min="0" inputmode="numeric"></div>
-        <div><label for="cfgCad">Saltos por minuto</label><input type="number" id="cfgCad" min="1" max="300" inputmode="numeric"></div>
-      </div>
-      <div id="blocks"></div>
-      <div class="cfg-actions">
-        <button type="button" id="addBlock" class="btn">+ Bloque</button>
-        <button type="button" id="restoreCfg" class="btn">Restaurar mi rutina</button>
-      </div>
-      <p class="hint" id="cfgSummary"></p>
-      <button type="button" class="btn primary" data-go="reloj">Ir al reloj</button>
-    </section>
+    <div class="cfg-grid">
+      <section class="card cfg" aria-labelledby="cfgCuerda">
+        <h2 id="cfgCuerda" class="cfg-title">Salto de cuerda</h2>
+        <div class="cfg-row">
+          <div><label for="cfgPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgPrep" min="0" inputmode="numeric"></div>
+          <div><label for="cfgPost">Prepárate tras descanso (s)</label><input type="number" id="cfgPost" min="0" inputmode="numeric"></div>
+          <div><label for="cfgCad">Saltos por minuto</label><input type="number" id="cfgCad" min="1" max="300" inputmode="numeric"></div>
+        </div>
+        <p class="hint">El tiempo al iniciar solo se usa al comenzar; los otros ejercicios no llevan preparación.</p>
+        <div id="blocks"></div>
+        <div class="cfg-actions">
+          <button type="button" id="addBlock" class="btn">+ Bloque</button>
+          <button type="button" id="restoreCfg" class="btn">Restaurar mi rutina</button>
+        </div>
+        <p class="hint" id="cfgSummary"></p>
+      </section>
+
+      <section class="card cfg" aria-labelledby="cfgOtros">
+        <h2 id="cfgOtros" class="cfg-title">Otros ejercicios</h2>
+        <p class="hint">Pesas y demás, justo después de la cuerda. Su tiempo suma al total de ejercicio (sin los descansos).</p>
+        <label class="switch"><input type="checkbox" id="cfgOOn"><span>Hacer otros ejercicios después de la cuerda</span></label>
+        <div class="cfg-row two" id="cfgOFields">
+          <div><label for="cfgOWork">Tiempo de ejercicio (s)</label><input type="number" id="cfgOWork" min="1" inputmode="numeric"></div>
+          <div><label for="cfgORest">Tiempo de descanso (s)</label><input type="number" id="cfgORest" min="0" inputmode="numeric"></div>
+        </div>
+        <p class="hint">Se repite ejercicio → descanso hasta que pulses "Terminar rutina".</p>
+      </section>
+    </div>
+    <button type="button" class="btn primary cfg-go" data-go="reloj">Ir al reloj</button>
   </main>
 
   <!-- Modal edición de ejercicios -->
@@ -175,9 +192,9 @@
   <audio id="alertSound" src="assets/sounds/alert.mp3" preload="auto"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="js/config.js?v=1792536367"></script>
-  <script src="js/ejercicios.js?v=1792536367"></script>
-  <script src="js/reloj.js?v=1792536367"></script>
-  <script src="js/rutina.js?v=1792536367"></script>
+  <script src="js/config.js?v=1792642591"></script>
+  <script src="js/ejercicios.js?v=1792642591"></script>
+  <script src="js/reloj.js?v=1792642591"></script>
+  <script src="js/rutina.js?v=1792642591"></script>
 </body>
 </html>
