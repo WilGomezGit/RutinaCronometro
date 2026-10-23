@@ -121,13 +121,15 @@
     if (phases[i + 1]) return phases[i + 1];
     if (!othersOn) return null;
     const p = phases[i];
+    if (p.session === 'cuerda' && cfg.others.prep > 0) return { type: 'prep', dur: cfg.others.prep };
     if (p.session === 'otros' && p.type === 'work' && cfg.others.rest > 0) return { type: 'rest', dur: cfg.others.rest };
     return { type: 'work', dur: cfg.others.work };
   }
 
   function serieText(p) {
     if (!p) return `Serie 0 de ${totalSeries}`;
-    return p.session === 'otros' ? `Otros ejercicios · ${p.n}` : `Serie ${p.n || 0} de ${totalSeries}`;
+    if (p.session === 'otros') return p.n ? `Otros ejercicios · ${p.n}` : 'Otros ejercicios';
+    return `Serie ${p.n || 0} de ${totalSeries}`;
   }
 
   function setPhaseUI(p) {
@@ -162,16 +164,22 @@
     seriesInfo.push(info); seriesEls.push(row);
   }
 
+  function seriesInfoFor(p, i) {
+    const same = phases.map((q, j) => [q, j]).filter(([q]) => q.session === p.session && q.n === p.n && q.type !== 'work' && q.type !== 'prep');
+    const restPhase = same.find(([q]) => q.type === 'rest');
+    let last = i, restDur = restPhase ? restPhase[0].dur : 0;
+    same.forEach(([, j]) => { last = Math.max(last, j); });
+    if (p.session === 'otros' && !restPhase && i === phases.length - 1 && cfg.others.rest > 0) { last = i + 1; restDur = cfg.others.rest; }
+    const o = p.session === 'otros';
+    return { label: o ? 'E' + p.n : p.n, work: i, last,
+      desc: `${p.dur} s ${o ? 'ejercicio' : 'activo'}` + (restDur ? ` · ${restDur} s descanso` : '') };
+  }
+
   function buildTimelineAndSeries() {
     $('timeline').innerHTML = ''; $('seriesList').innerHTML = '';
     segEls = []; seriesInfo = []; seriesEls = [];
     phases.forEach(addSegment);
-    phases.forEach((p, i) => {
-      if (p.type !== 'work') return;
-      let last = i, rest = 0;
-      phases.forEach((q, j) => { if (q.n === p.n && q.type !== 'work' && q.type !== 'prep') { last = Math.max(last, j); if (q.type === 'rest') rest = q.dur; } });
-      addSeriesRow({ label: p.n, work: i, last, desc: `${p.dur} s activo` + (rest ? ` · ${rest} s descanso` : '') });
-    });
+    phases.forEach((p, i) => { if (p.type === 'work') addSeriesRow(seriesInfoFor(p, i)); });
   }
 
   function updateSeries() {
@@ -188,7 +196,9 @@
     const last = phases[phases.length - 1];
     const o = cfg.others;
     let p;
-    if (last.session === 'otros' && last.type === 'work' && o.rest > 0) {
+    if (last.session === 'cuerda' && o.prep > 0) {
+      p = { type: 'prep', session: 'otros', dur: o.prep };   // preparación una sola vez, antes del primer ejercicio
+    } else if (last.session === 'otros' && last.type === 'work' && o.rest > 0) {
       p = { type: 'rest', session: 'otros', dur: o.rest, n: last.n };
     } else {
       otherCount++;
@@ -226,7 +236,8 @@
     if (rn !== lastNotes[1]) $('restNote').textContent = lastNotes[1] = rn;
 
     const worked = workedSoFar(el);
-    $('jumpsNow').textContent = jumpsFor(worked);
+    const inSet = p.type === 'work' && p.session === 'cuerda' ? jumpsFor(el) : 0;
+    $('jumpsNow').textContent = sets.reduce((n, x) => n + x.jumps, 0) + inSet;
     $('jumpsRate').textContent = worked > 0 ? cfg.cadence : 0;
     $('jumpsSet').textContent = p.type === 'work' && p.session === 'cuerda' ? jumpsFor(el) : '0';
 
@@ -362,6 +373,41 @@
     if (running) draw();
   }
 
+  // --- Cambios de configuración con el reloj en marcha ---
+  // Lo ya hecho no cambia; la fase en curso y lo que falta toman los valores nuevos.
+  let liveTimer = 0;
+  function scheduleLive() { clearTimeout(liveTimer); liveTimer = setTimeout(applyLive, 600); }
+
+  function applyLive() {
+    if (!running) return;
+    const cur = phases[idx], el = currentEl();
+    cfg = loadConfig(day);
+    othersOn = !!cfg.others.enabled;
+    if (cur.session === 'cuerda') {
+      const fresh = buildPhases(cfg);
+      fresh.forEach(p => { p.session = 'cuerda'; });
+      const j = fresh.findIndex(q => q.type === cur.type && q.n === cur.n);
+      if (j < 0) { phases = phases.slice(0, idx + 1); cur.dur = Math.max(el, 0.001); }   // esa serie ya no existe: la cuerda termina aquí
+      else phases = phases.slice(0, idx).concat(fresh.slice(j));
+      const cu = phases.filter(p => p.session === 'cuerda');
+      grand = cu.reduce((s, p) => s + p.dur, 0);
+      workTotal = cu.filter(p => p.type === 'work').reduce((s, p) => s + p.dur, 0);
+      restTotal = cu.filter(p => p.type === 'rest').reduce((s, p) => s + p.dur, 0);
+      totalSeries = cfg.blocks.reduce((n, b) => n + b.reps, 0);
+    } else {
+      const o = cfg.others;
+      cur.dur = Math.max(0.001, cur.type === 'work' ? o.work : cur.type === 'rest' ? o.rest : o.prep);
+    }
+    buildTimelineAndSeries();
+    for (let i = 0; i < idx; i++) segEls[i].style.width = '100%';
+    lastNotes = ['', ''];
+    setPhaseUI(phases[idx]);
+    draw();
+    const live = $('cfgLive');
+    live.textContent = 'Aplicado al reloj en marcha ✓';
+    clearTimeout(live._t); live._t = setTimeout(() => { live.textContent = ''; }, 2500);
+  }
+
   // --- Configuración ---
   const num = (v, min) => { v = parseInt(v, 10); return isNaN(v) ? min : Math.max(min, v); };
 
@@ -369,7 +415,7 @@
     const c = loadConfig(day);
     $('cfgPrep').value = c.prep; $('cfgPost').value = c.postRest; $('cfgCad').value = c.cadence;
     $('cfgPostOn').checked = c.postRestOn; $('cfgPostField').classList.toggle('off', !c.postRestOn);
-    $('cfgOOn').checked = c.others.enabled; $('cfgOWork').value = c.others.work; $('cfgORest').value = c.others.rest;
+    $('cfgOOn').checked = c.others.enabled; $('cfgOPrep').value = c.others.prep; $('cfgOWork').value = c.others.work; $('cfgORest').value = c.others.rest;
     $('cfgOFields').classList.toggle('off', !c.others.enabled);
     $('blocks').innerHTML = c.blocks.map((b, i) => `
       <div class="block" data-i="${i}">
@@ -390,7 +436,7 @@
     const c = loadConfig(day);
     fn(c); saveConfig(day, c);
     if (rerender) renderConfig(); else updateSummary(c);
-    if (!running) reset();
+    if (running) scheduleLive(); else reset();
   }
 
   function initConfig() {
@@ -399,6 +445,7 @@
     $('cfgPost').addEventListener('input', e => mutate(c => c.postRest = num(e.target.value, 1)));
     $('cfgCad').addEventListener('input', e => mutate(c => c.cadence = num(e.target.value, 1)));
     $('cfgOOn').addEventListener('change', e => mutate(c => c.others.enabled = e.target.checked, true));
+    $('cfgOPrep').addEventListener('input', e => mutate(c => c.others.prep = num(e.target.value, 0)));
     $('cfgOWork').addEventListener('input', e => mutate(c => c.others.work = num(e.target.value, 1)));
     $('cfgORest').addEventListener('input', e => mutate(c => c.others.rest = num(e.target.value, 0)));
     $('blocks').addEventListener('input', e => {
@@ -412,7 +459,7 @@
     });
     $('addBlock').addEventListener('click', () => mutate(c => c.blocks.push({ ...c.blocks[c.blocks.length - 1] }), true));
     $('restoreCfg').addEventListener('click', () => {
-      saveConfig(day, structuredClone(DEFAULT_CONFIG)); renderConfig(); if (!running) reset();
+      saveConfig(day, structuredClone(DEFAULT_CONFIG)); renderConfig(); if (running) scheduleLive(); else reset();
     });
   }
 

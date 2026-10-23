@@ -9,9 +9,9 @@ const DEFAULT_CONFIG = {
     { work: 120, rest: 60,  reps: 2 },
     { work: 240, rest: 120, reps: 1 }
   ],
-  // Otros ejercicios (pesas, etc.): van después de la cuerda, sin preparación,
-  // y se repiten ejercicio → descanso hasta pulsar "Terminar rutina"
-  others: { enabled: true, work: 45, rest: 30 }
+  // Otros ejercicios (pesas, etc.): van después de la cuerda, con una preparación opcional
+  // solo al inicio, y se repiten ejercicio → descanso hasta pulsar "Terminar rutina"
+  others: { enabled: true, prep: 0, work: 45, rest: 30 }
 };
 
 function cfgKey(day) { return `reloj_${day}`; }
