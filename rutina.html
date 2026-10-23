@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=1792643604">
+  <link rel="stylesheet" href="css/styles.css?v=1792790150">
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -158,17 +158,19 @@
           <button type="button" id="restoreCfg" class="btn">Restaurar mi rutina</button>
         </div>
         <p class="hint" id="cfgSummary"></p>
+        <p class="hint live" id="cfgLive" role="status"></p>
       </section>
 
       <section class="card cfg" aria-labelledby="cfgOtros">
         <h2 id="cfgOtros" class="cfg-title">Otros ejercicios</h2>
         <p class="hint">Pesas y demás, justo después de la cuerda. Su tiempo suma al total de ejercicio (sin los descansos).</p>
         <label class="switch"><input type="checkbox" id="cfgOOn"><span>Hacer otros ejercicios después de la cuerda</span></label>
-        <div class="cfg-row two" id="cfgOFields">
+        <div class="cfg-row" id="cfgOFields">
+          <div><label for="cfgOPrep">Tiempo al iniciar (s)</label><input type="number" id="cfgOPrep" min="0" inputmode="numeric"></div>
           <div><label for="cfgOWork">Tiempo de ejercicio (s)</label><input type="number" id="cfgOWork" min="1" inputmode="numeric"></div>
           <div><label for="cfgORest">Tiempo de descanso (s)</label><input type="number" id="cfgORest" min="0" inputmode="numeric"></div>
         </div>
-        <p class="hint">Se repite ejercicio → descanso hasta que pulses "Terminar rutina".</p>
+        <p class="hint">El tiempo al iniciar ocurre una sola vez, antes del primer ejercicio (0 = sin preparación). Después se repite ejercicio → descanso hasta que pulses "Terminar rutina".</p>
       </section>
     </div>
     <button type="button" class="btn primary cfg-go" data-go="reloj">Ir al reloj</button>
@@ -190,14 +192,14 @@
     </div>
   </div>
 
-  <footer class="footer"><span>Creado por Wil Gómez · 2025</span><span>© Todos los derechos reservados · v9</span></footer>
+  <footer class="footer"><span>Creado por Wil Gómez · 2025</span><span>© Todos los derechos reservados · v10</span></footer>
 
   <audio id="alertSound" src="assets/sounds/alert.mp3" preload="auto"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="js/config.js?v=1792643604"></script>
-  <script src="js/ejercicios.js?v=1792643604"></script>
-  <script src="js/reloj.js?v=1792643604"></script>
-  <script src="js/rutina.js?v=1792643604"></script>
+  <script src="js/config.js?v=1792790150"></script>
+  <script src="js/ejercicios.js?v=1792790150"></script>
+  <script src="js/reloj.js?v=1792790150"></script>
+  <script src="js/rutina.js?v=1792790150"></script>
 </body>
 </html>
